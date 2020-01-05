@@ -1,3 +1,13 @@
+## Get Started
+
+- Clone this repo
+- composer install
+- cp .env.example .env
+- set up your database setting on .env
+- php artisan key:generate
+- php artisan migrate
+- php artisan db:seed
+
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
 <p align="center">
