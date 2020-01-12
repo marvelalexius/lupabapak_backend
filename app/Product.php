@@ -15,4 +15,8 @@ class Product extends Model
     {
         return $this->hasMany('App\TransactionDetail');
     }
+
+    public function isWishlist($user_id) {
+        return $this->user_wishlist()->where('user_id', $user_id)->exists();
+    }
 }
