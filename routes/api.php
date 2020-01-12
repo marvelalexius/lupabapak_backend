@@ -22,10 +22,14 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
-
 Route::get('products', 'ProductController@index');
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('wishlist', 'WishlistController');
     Route::post('transaction', 'TransactionController@store');
+});
+
+Route::prefix('payment')->namespace('Paypal')->name('paypal.')->group(function() {
+    Route::get('transaction/{reservation_id}', 'TransactionController@payment')->name('transaction');
+    Route::post('complete', 'TransactionController@getOrder')->name('complete');
 });

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Product;
 
+use Validator;
+
 class WishlistController extends Controller
 {
     /**
@@ -45,16 +47,11 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'product_id' => 'required',
-            'user_id' => 'required'
-        ]);
+        $wishlists = collect(json_decode($request->getContent()));
+        $wishlists = $wishlists->pluck('id');
+        $user = User::find($request->user()->id);
 
-        $user = User::find($request->user_id);
-
-        $product_id = $request->product_id;
-
-        $user->wishlist()->sync($product_id);
+        $user->wishlist()->sync($wishlists);
 
         return response()->json([
             'message' => 'Success adding to wishlist',
