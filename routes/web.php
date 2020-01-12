@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes(['register' => false]);
+
+Route::resource('products', 'WebProductController')->middleware('auth:admin_web');
