@@ -20,7 +20,7 @@ class WishlistController extends Controller
     {
         $user = User::find($request->user_id);
 
-        $wishlists = $user->wishlist();
+        $wishlists = $user->wishlist;
 
         return response()->json([
             'message' => 'success',
