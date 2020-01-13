@@ -22,7 +22,7 @@ class TransactionController extends Controller
         }
 
         $transaction = new Transaction();
-        
+
         $transaction->user_id = $user->id;
         $transaction->code = $code;
         $transaction->total = $total;
@@ -39,10 +39,11 @@ class TransactionController extends Controller
             $detail->subtotal = $cart->quantity * $cart->price;
             $detail->save();
         }
-        
+
         return response()->json([
             'message' => 'Success, your transaction has been accepted with code '.$code,
             'status' => 'success',
+            'data' => $code,
             'code' => 200
         ], 200);
     }
