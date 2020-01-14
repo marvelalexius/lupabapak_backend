@@ -27,7 +27,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed'
         ];
-        
+
         $validator = Validator::make($request->all(), $parameters);
 
         if ($validator->fails()) {
@@ -53,12 +53,12 @@ class AuthController extends Controller
 
         $tokenResult = $user->createToken('User Token');
         $token = $tokenResult->token;
-        
+
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
-        
+
         $token->save();
-        
+
         return response()->json([
             'user' => $user,
             'access_token' => $tokenResult->accessToken,
@@ -69,7 +69,7 @@ class AuthController extends Controller
             'message' => 'Successfully created user!'
         ], 201);
     }
-  
+
     /**
      * Login user and create token
      *
@@ -100,6 +100,7 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
             return response()->json([
+                'status' => 401,
                 'message' => 'Unauthorized'
             ], 401);
 
@@ -109,9 +110,9 @@ class AuthController extends Controller
         $token = $tokenResult->token;
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
-        
+
         $token->save();
-        
+
         return response()->json([
             'user' => $user,
             'access_token' => $tokenResult->accessToken,
@@ -121,7 +122,7 @@ class AuthController extends Controller
             )->toDateTimeString()
         ]);
     }
-  
+
     /**
      * Logout user (Revoke the token)
      *
@@ -134,7 +135,7 @@ class AuthController extends Controller
             'message' => 'Successfully logged out'
         ]);
     }
-  
+
     /**
      * Get the authenticated User
      *
