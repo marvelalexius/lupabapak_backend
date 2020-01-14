@@ -51,7 +51,7 @@ class WishlistController extends Controller
         $wishlists = $wishlists->pluck('id');
         $user = User::find($request->user()->id);
 
-        $user->wishlist()->sync($wishlists);
+        $user->wishlist()->toggle($wishlists);
 
         return response()->json([
             'message' => 'Success adding to wishlist',

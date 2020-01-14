@@ -7,6 +7,9 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
+use App\Events\TransactionConfirmed;
+use App\Listeners\TransactionConfirmedMailing;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -18,6 +21,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        TransactionConfirmed::class => [
+            TransactionConfirmedMailing::class,
+        ]
     ];
 
     /**
