@@ -18,3 +18,5 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 
 Route::resource('products', 'WebProductController')->middleware('auth:admin_web');
+
+Route::get('transaction/{transaction_code}/detail', 'TransactionController@get')->name('transaction.detail');

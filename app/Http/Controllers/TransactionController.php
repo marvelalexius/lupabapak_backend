@@ -47,4 +47,24 @@ class TransactionController extends Controller
             'code' => 200
         ], 200);
     }
+
+    public function show(Request $request, $transaction_code)
+    {
+        $user = $request->user();
+
+        $transaction = Transaction::where('code', $transaction_code)->where('user_id', $user->id)->first();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Transaction found',
+            'data' => $transaction,
+        ]);
+    }
+
+    public function get(Request $request, $transaction_code)
+    {
+        $transaction = Transaction::where('code', $transaction_code)->first();
+
+        return view('detail', compact('transaction'));
+    }
 }
