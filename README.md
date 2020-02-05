@@ -1,3 +1,7 @@
+## Lupabapak Backend
+
+Backend for <a href="https://github.com/marvelalexius/lupabapak">Lupabapak</a> built using Laravel
+
 ## Get Started
 
 - Clone this repo
