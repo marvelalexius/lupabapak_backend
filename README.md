@@ -11,6 +11,8 @@ Backend for <a href="https://github.com/marvelalexius/lupabapak">Lupabapak</a> b
 - php artisan key:generate
 - php artisan migrate
 - php artisan db:seed
+- php artisan serve
+- run ngrok if you want to test it using <a href="https://github.com/marvelalexius/lupabapak">Lupabapak App</a> (ngrok http localhost:800)
 
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
