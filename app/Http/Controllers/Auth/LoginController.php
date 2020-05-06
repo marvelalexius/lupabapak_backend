@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+
+use App\User;
 
 class LoginController extends Controller
 {
@@ -22,17 +25,12 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    protected function guard()
-    {
-        return Auth::guard('admin_web');
-    }
-
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/products';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -42,5 +40,39 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectToProvider()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleProviderCallback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+        } catch (\Exception $e) {
+            return redirect('/login');
+        }
+
+        dd($user->token);
+
+        $existingUser = User::where('email', $user->email)->first();
+
+        if ($existingUser) {
+            auth()->login($existingUser, true);
+        } else {
+            $newUser = new User;
+            $newUser->name = $user->name;
+            $newUser->email = $user->email;
+            $newUser->google_id = $user->id;
+            $newUser->avatar = $user->avatar;
+            $newUser->avatar_original = $user->avatar_original;
+            $newUser->save();
+
+            auth()->login($newUser, true);
+        }
+
+        return redirect()->to('/home');
     }
 }
