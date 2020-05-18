@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,12 +8,12 @@ class Product extends Model
 {
     public function user_wishlist()
     {
-        return $this->belongsToMany('App\User', 'wishlist');
+        return $this->belongsToMany('App\Model\User', 'wishlist');
     }
 
     public function transaction_detail()
     {
-        return $this->hasMany('App\TransactionDetail');
+        return $this->hasMany('App\Model\TransactionDetail');
     }
 
     public function isWishlist($user_id) {

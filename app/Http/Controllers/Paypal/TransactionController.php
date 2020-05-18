@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use App\Http\Controllers\Paypal\PaypalClient;
 
-use App\Transaction;
-use App\Log;
-use App\LogLink;
+use App\Model\Transaction;
+use App\Model\Log;
+use App\Model\LogLink;
 
 class TransactionController extends Controller
 {
@@ -56,14 +56,14 @@ class TransactionController extends Controller
 
         // COMPLETED
         if($transaction->transaction_status == "pending"){
-        
-              
+
+
             if($log->status==="COMPLETED"){
                 $transaction->transaction_status = 'completed'; // waiting confirmation from property
             }else{
                 $reservation->transaction_status = 'completed'; // waiting confirmation from property
             }
-            
+
             $transaction->save();
         }
 

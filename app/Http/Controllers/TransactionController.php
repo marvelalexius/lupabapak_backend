@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Str;
 
-use App\Transaction;
-use App\TransactionDetail;
+use App\Model\Transaction;
+use App\Model\TransactionDetail;
 
 class TransactionController extends Controller
 {
