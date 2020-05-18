@@ -12,6 +12,7 @@ class AdminsTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('admins')->truncate();
         DB::table('admins')->insert([
             'name' => 'Admin',
             'email' => 'admin@admin.com',

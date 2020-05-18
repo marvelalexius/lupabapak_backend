@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -42,11 +42,11 @@ class User extends Authenticatable
 
     public function wishlist()
     {
-        return $this->belongsToMany('App\Product', 'wishlist');
+        return $this->belongsToMany('App\Model\Product', 'wishlist');
     }
 
     public function transaction()
     {
-        return $this->hasMany('App\Transaction');
+        return $this->hasMany('App\Model\Transaction');
     }
 }

@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Validator;
 use Laravel\Socialite\Facades\Socialite;
 
-use App\User;
+use App\Model\User;
 
 class AuthController extends Controller
 {
@@ -126,45 +126,59 @@ class AuthController extends Controller
     public function loginGoogle(Request $request)
     {
         try {
-            $user = Socialite::driver('google')->userFromToken('ya29.a0Ae4lvC0fgN8rUYE-savAdhxQp1GvVf4TsAQ4-NL--dJbf0AdU2EIrIA0Nc7CkdMeFZAIQ1KJpdokCr67Hv4fPezghEbXB6daxNP3IVEBgXdY57RwFgcVasB4iZzQ9ctSuH1pniGoPEkWq_Mkg7MLSoKzsP9W1AidmJw');
+            $client = new \Google_Client([
+                'client_id' => config('services.google.client_id'),
+                'client_secret' => config('services.google.client_secret')
+            ]);
+
+            $client->addScope('email');
+            $client->addScope('profile');
+            $payload = $client->verifyIdToken($request->google_token);
+
+            if (empty($payload)) {
+                return response()->json([
+                    'error' => 'Invalid Google Token'
+                ]);
+            }
+
+            $isVerified = $payload['email_verified'];
+
+            if (!$isVerified) {
+                return response()->json(['error' => 'Email is not verified.']);
+            }
+
+            $user = User::firstOrCreate(
+                ['email' => $payload['email']],
+                [
+                    'name' => $payload['name'],
+                    'google_id' => $payload['sub'],
+                    'avatar' => $payload['picture'],
+                    'avatar_original' => $payload['picture']
+                ]
+            );
+
+            $loginUser = auth()->login($user, true);
+
+            $tokenResult = $user->createToken('User Token');
+            $token = $tokenResult->token;
+            if ($request->remember_me)
+                $token->expires_at = Carbon::now()->addWeeks(1);
+
+            $token->save();
+
+            return response()->json([
+                'user' => $user,
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse(
+                    $tokenResult->token->expires_at
+                )->toDateTimeString()
+            ]);
         } catch (\Exception $e) {
-            dd($e);
             return response()->json([
                 'error' => $e,
             ]);
         }
-
-        $existingUser = User::where('email', $user->email)->first();
-
-        if ($existingUser) {
-            $loginUser = auth()->login($existingUser, true);
-        } else {
-            $newUser = new User;
-            $newUser->name = $user->name;
-            $newUser->email = $user->email;
-            $newUser->google_id = $user->id;
-            $newUser->avatar = $user->avatar;
-            $newUser->avatar_original = $user->avatar_original;
-            $newUser->save();
-
-            $loginUser = auth()->login($newUser, true);
-        }
-
-        $tokenResult = $loginUser->createToken('User Token');
-        $token = $tokenResult->token;
-        if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addWeeks(1);
-
-        $token->save();
-
-        return response()->json([
-            'user' => $loginUser,
-            'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse(
-                $tokenResult->token->expires_at
-            )->toDateTimeString()
-        ]);
     }
 
     /**

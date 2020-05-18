@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +10,11 @@ class TransactionDetail extends Model
 
     public function transaction()
     {
-        return $this->belongsTo('App\Transaction');
+        return $this->belongsTo('App\Model\Transaction');
     }
 
     public function product()
     {
-        return $this->belongsTo('App\Product');
+        return $this->belongsTo('App\Model\Product');
     }
 }

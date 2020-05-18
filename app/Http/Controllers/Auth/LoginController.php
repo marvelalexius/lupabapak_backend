@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
-use App\User;
+use App\Model\User;
 
 class LoginController extends Controller
 {
@@ -54,8 +54,6 @@ class LoginController extends Controller
         } catch (\Exception $e) {
             return redirect('/login');
         }
-
-        dd($user->token);
 
         $existingUser = User::where('email', $user->email)->first();
 
