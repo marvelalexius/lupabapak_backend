@@ -11,8 +11,6 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    protected $with = ['wishlist'];
-
     /**
      * The attributes that are mass assignable.
      *
