@@ -18,7 +18,7 @@ class WishlistController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::find($request->user_id);
+        $user = $request->user();
 
         $wishlists = $user->wishlist;
 
@@ -47,15 +47,17 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $wishlists = collect(json_decode($request->getContent()));
-        $wishlists = $wishlists->pluck('id');
-        $user = User::find($request->user()->id);
+        $this->validate($request, [
+            'product_id' => 'required',
+        ]);
 
-        $user->wishlist()->toggle($wishlists);
+        $user = $request->user();
+
+        $user->wishlist()->toggle($request->product_id);
 
         return response()->json([
             'message' => 'Success adding to wishlist',
-            'data' => null,
+            'data' => $user->wishlist,
             'code' => 200
         ], 200);
     }
@@ -104,10 +106,9 @@ class WishlistController extends Controller
     {
         $this->validate($request, [
             'product_id' => 'required',
-            'user_id' => 'required'
         ]);
 
-        $user = User::find($request->user_id);
+        $user = $request->user();
 
         $product_id = $request->product_id;
 
@@ -115,7 +116,7 @@ class WishlistController extends Controller
 
         return response()->json([
             'message' => 'Success removing from wishlist',
-            'data' => null,
+            'data' => $user->wishlist,
             'code' => 200
         ], 200);
     }
