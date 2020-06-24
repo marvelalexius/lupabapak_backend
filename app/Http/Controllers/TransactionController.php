@@ -17,8 +17,10 @@ class TransactionController extends Controller
 
         $total = 0;
 
+        $cart_ids = collect($carts)->pluck('id');
+
         foreach ($carts as $cart) {
-            $total += $cart->price * $cart->quantity;
+            $total += $cart->price * $cart->pivot->quantity;
         }
 
         $transaction = new Transaction();
@@ -34,15 +36,15 @@ class TransactionController extends Controller
             $detail = new TransactionDetail();
             $detail->transaction_id = $transaction->id;
             $detail->product_id = $cart->id;
-            $detail->quantity = $cart->quantity;
-            $detail->price = $cart->price;
-            $detail->subtotal = $cart->quantity * $cart->price;
+            $detail->quantity = $cart->pivot->quantity;
+            $detail->price = $cart->pivot->price;
             $detail->save();
         }
 
+        $user->carts()->detach($cart_ids);
+
         return response()->json([
             'message' => 'Success, your transaction has been accepted with code '.$code,
-            'status' => 'success',
             'data' => $code,
             'code' => 200
         ], 200);

@@ -19,8 +19,10 @@ class CreateTransactionDetailsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->double('price', 10, 2);
-            $table->double('subtotal', 10, 2);
             $table->timestamps();
+
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 

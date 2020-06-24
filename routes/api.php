@@ -28,6 +28,7 @@ Route::get('products', 'ProductController@index');
 Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('wishlist', 'WishlistController');
     Route::post('transaction', 'TransactionController@store');
+    Route::resource('cart', 'CartController');
 });
 
 Route::prefix('payment')->namespace('Paypal')->name('paypal.')->group(function() {

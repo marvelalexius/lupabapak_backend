@@ -16,6 +16,11 @@ class Product extends Model
         return $this->hasMany('App\Model\TransactionDetail');
     }
 
+    public function cart()
+    {
+        return $this->belongsToMany('App\Model\User', 'carts')->withPivot('quantity', 'price');
+    }
+
     public function isWishlist($user_id) {
         return $this->user_wishlist()->where('user_id', $user_id)->exists();
     }

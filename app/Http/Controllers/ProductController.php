@@ -12,7 +12,6 @@ class ProductController extends Controller
         $product = new Product();
 
         $products = $product->all();
-        // ddd($products[0]->user_wishlist()->where('user_id', 1)->exists());
 
         return response()->json([
             'message' => 'success',
